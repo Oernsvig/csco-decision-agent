@@ -1,0 +1,19 @@
+{
+  "scenario_id": "sb_0012",
+  "disruption_type": "cyber",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-CYB-01",
+      "disposition": "maintain",
+      "escalation": "Responsible Analyst",
+      "fired_rule_id": "CYB-LOW",
+      "permitted_actions": [
+        "intensify_threat_monitoring"
+      ],
+      "strategic_priority": "Rapid Reconfiguration",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

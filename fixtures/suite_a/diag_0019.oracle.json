@@ -1,0 +1,20 @@
+{
+  "scenario_id": "diag_0019",
+  "disruption_type": "economic",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-ECO-01",
+      "disposition": "monitor",
+      "escalation": "Cross-functional Management",
+      "fired_rule_id": "ECON-R1",
+      "permitted_actions": [
+        "intensify_threat_monitoring",
+        "scenario_lever_generation"
+      ],
+      "strategic_priority": "Cost Containment",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

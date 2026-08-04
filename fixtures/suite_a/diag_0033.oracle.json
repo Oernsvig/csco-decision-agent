@@ -1,0 +1,21 @@
+{
+  "scenario_id": "diag_0033",
+  "disruption_type": "labour",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-LAB-01",
+      "disposition": "replace",
+      "escalation": "Executive Leadership",
+      "fired_rule_id": "LAB-SITE",
+      "permitted_actions": [
+        "activate_pre_qualified_alternate",
+        "reroute_logistics",
+        "scenario_lever_generation"
+      ],
+      "strategic_priority": "Continuity Protection",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

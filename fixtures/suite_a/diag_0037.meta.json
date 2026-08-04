@@ -1,0 +1,10 @@
+{
+  "scenario_id": "diag_0037",
+  "disruption_type": "labour",
+  "suite": "A",
+  "stratum": "action",
+  "null_mode": null,
+  "boundary": "none",
+  "target_rule_id": "LAB-LOWS",
+  "oracle_source": "deterministic_policy_evaluator"
+}

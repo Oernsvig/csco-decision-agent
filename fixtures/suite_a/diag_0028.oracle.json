@@ -1,0 +1,19 @@
+{
+  "scenario_id": "diag_0028",
+  "disruption_type": "cyber",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-CYB-01",
+      "disposition": "monitor",
+      "escalation": "Responsible Analyst",
+      "fired_rule_id": "CYB-MED",
+      "permitted_actions": [
+        "intensify_threat_monitoring"
+      ],
+      "strategic_priority": "Rapid Reconfiguration",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

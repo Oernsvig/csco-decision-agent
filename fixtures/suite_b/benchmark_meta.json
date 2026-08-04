@@ -1,0 +1,10 @@
+{
+  "suite_id": "suite_b_null_v2",
+  "total_fixtures": 35,
+  "stratum": "null",
+  "description": "Suite B: 15 no-action canonical cases (one per null rule) + 20 additional null scenarios (4 null modes x 5 disruption types) = 35.",
+  "generation_seed": 20240,
+  "specs_hash": "4fd4cda78dcad26a",
+  "prompt_version": "1.0",
+  "generated_at": "2026-08-01T12:16:09.786712Z"
+}

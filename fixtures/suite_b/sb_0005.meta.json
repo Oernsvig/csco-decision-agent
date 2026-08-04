@@ -1,0 +1,10 @@
+{
+  "scenario_id": "sb_0005",
+  "disruption_type": "natural_disaster",
+  "suite": "B",
+  "stratum": "null",
+  "null_mode": "canonical",
+  "boundary": "none",
+  "target_rule_id": "NAT-DT-NULL",
+  "oracle_source": "deterministic_policy_evaluator"
+}

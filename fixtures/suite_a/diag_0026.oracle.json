@@ -1,0 +1,20 @@
+{
+  "scenario_id": "diag_0026",
+  "disruption_type": "cyber",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-CYB-01",
+      "disposition": "monitor",
+      "escalation": "Cross-functional Management",
+      "fired_rule_id": "CYB-R1",
+      "permitted_actions": [
+        "intensify_threat_monitoring",
+        "convene_crisis_response_center"
+      ],
+      "strategic_priority": "Rapid Reconfiguration",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

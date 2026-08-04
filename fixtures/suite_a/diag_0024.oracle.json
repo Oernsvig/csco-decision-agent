@@ -1,0 +1,21 @@
+{
+  "scenario_id": "diag_0024",
+  "disruption_type": "cyber",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-CYB-01",
+      "disposition": "replace",
+      "escalation": "Executive Leadership",
+      "fired_rule_id": "CYB-R3",
+      "permitted_actions": [
+        "activate_pre_qualified_alternate",
+        "intensify_threat_monitoring",
+        "scenario_lever_generation"
+      ],
+      "strategic_priority": "Rapid Reconfiguration",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

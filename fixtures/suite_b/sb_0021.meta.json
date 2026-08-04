@@ -1,0 +1,10 @@
+{
+  "scenario_id": "sb_0021",
+  "disruption_type": "natural_disaster",
+  "suite": "B",
+  "stratum": "null",
+  "null_mode": "all_tier1_low_risk",
+  "boundary": "none",
+  "target_rule_id": null,
+  "oracle_source": "deterministic_policy_evaluator"
+}

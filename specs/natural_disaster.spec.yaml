@@ -1,0 +1,321 @@
+# =====================================================================
+#  DECISION SPECIFICATION  -  natural_disaster
+#  DISTINCT SIGNATURE: Acute and regional; weights exposure breadth and being in the hit region.
+# =====================================================================
+
+disruption_type: natural_disaster
+
+risk_bands:
+  HIGH:   ">=0.60"
+  MEDIUM: "0.45-0.59"
+  LOW:    "<0.45"
+
+sub_score_bands:
+  high: ">=0.66"
+  med:  "0.33-0.65"
+  low:  "<0.33"
+
+strategic_priority_cell: "Rapid Reconfiguration"
+strategic_priority_note: "Acute, shorter disruptions favour flexibility / contingent rerouting over standing redundancy (Tomlin 2006)."
+
+levers:
+  permitted_response:
+    - activate_pre_qualified_alternate
+    - intensify_threat_monitoring
+    - scenario_lever_generation
+    - strategic_buffer_drawdown
+    - convene_crisis_response_center
+    - reroute_logistics
+    - expedited_emergent_design
+  prohibited_at_response:
+    - reshoring_nearshoring
+    - footprint_redesign
+    - new_in_sourcing
+    - ground_up_redesign
+    - contract_renegotiation
+
+escalation_ladder:
+  levels:
+    - { name: "Responsible Analyst", rank: 0, authority: responsible_analyst }
+    - { name: "Cross-functional Management", rank: 1, authority: cross_functional_management }
+    - { name: "Executive Leadership", rank: 2, authority: executive_leadership }
+
+# =====================================================================
+#  BENCHMARK EVALUATION DESIGN
+# =====================================================================
+
+evaluation_design:
+  threshold_probe_values:
+    LOW_EDGE: 0.449
+    MEDIUM_LOWER_EDGE: 0.450
+    MEDIUM_UPPER_EDGE: 0.599
+    HIGH_EDGE: 0.600
+  contrast_pairs:
+    - pair_id: NAT_R3_vs_NAT_MED
+      focal_rule: NAT-R3
+      contrast_rule: NAT-MED
+      vary_only: [shared_subtier_source, count_disrupted_paths]
+      purpose: "Tests whether natural-disaster shared sub-tier convergence override fires before generic medium monitoring."
+    - pair_id: NAT_R5_vs_NAT_MED
+      focal_rule: NAT-R5
+      contrast_rule: NAT-MED
+      vary_only: [tier1_in_region, sub_exposure_breadth]
+      purpose: "Tests whether the breadth discriminator is applied instead of generic medium-risk monitoring."
+    - pair_id: NAT_R1_vs_NAT_R2
+      focal_rule: NAT-R1
+      contrast_rule: NAT-R2
+      vary_only: [tier1_in_region]
+      purpose: "In-region location discriminates replace (NAT-R1) from monitor (NAT-R2) for HIGH-risk suppliers."
+    - pair_id: NAT_DT_vs_NAT_DT_NULL
+      focal_rule: NAT-DT
+      contrast_rule: NAT-DT-NULL
+      vary_only: [shared_subtier_source, count_disrupted_paths]
+      purpose: "Tests whether structural lower-tier concern is distinguished from harmless deep-tier exposure."
+    - pair_id: NAT_MEDS_vs_NAT_MED
+      focal_rule: NAT-MEDS
+      contrast_rule: NAT-MED
+      vary_only: [sub_exposure_breadth]
+      purpose: "High exposure breadth (wide downstream reach) triggers proactive contingency (Cross-functional Management) vs generic monitoring (Responsible Analyst)."
+
+# =====================================================================
+#  DECISION RULES
+# =====================================================================
+
+# --- PASS 1: scenario-level routing rules -----------------------------
+routing_rules:
+  - rule_id: NAT-NULL
+    when: "path_on_network == false OR (all Tier-1 LOW AND sub_downstream_criticality not high)"
+    consequence:
+      route: maintain_and_log
+      disposition: maintain
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+
+  - rule_id: NAT-DT
+    when: "tier1_on_disrupted_path == false AND (shared_subtier_source == true OR count_disrupted_paths >= 2)"
+    consequence:
+      route: structural_fallthrough
+      disposition: monitor
+      escalation: "Cross-functional Management"
+    note: "No Tier-1 scored - branch on structure + material, do not default to maintain."
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+      contrast_with: [NAT-DT-NULL]
+
+  - rule_id: NAT-DT-NULL
+    when: "tier1_on_disrupted_path == false AND NOT (shared_subtier_source == true OR count_disrupted_paths >= 2)"
+    consequence:
+      route: maintain_and_log
+      disposition: maintain
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+      contrast_with: [NAT-DT]
+
+# --- PASS 2: per-Tier-1 supplier rules --------------------------------
+supplier_rules:
+
+  - rule_id: NAT-R3                                 # shared sub-tier override
+    priority: 1
+    when_all:
+      shared_subtier_source: true
+      count_disrupted_paths: ">=2"
+      risk_level: [MEDIUM, HIGH]
+    consequence:
+      disposition: replace
+      permitted: [activate_pre_qualified_alternate, reroute_logistics, scenario_lever_generation]
+      escalation: "Executive Leadership"
+    evaluation:
+      clusters:
+        - C3_PRIORITY_OVERRIDE
+        - C4_SCENARIO_SUPPLIER_JOIN
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [NAT-R1, NAT-MED]
+
+  - rule_id: NAT-R1                                 # directly hit, high-risk
+    priority: 2
+    when_all:
+      risk_level: HIGH
+      tier1_in_region: true
+    consequence:
+      disposition: replace
+      permitted: [activate_pre_qualified_alternate, reroute_logistics, intensify_threat_monitoring]
+      escalation: "Executive Leadership"
+    evaluation:
+      clusters:
+        - C5_TYPE_SPECIFICITY
+        - C6_THRESHOLD_BANDING
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [NAT-R2]
+
+  - rule_id: NAT-R5                                 # BREADTH DISCRIMINATOR
+    priority: 3
+    when_all:
+      risk_level: MEDIUM
+      tier1_in_region: true
+      sub_exposure_breadth: high
+    consequence:
+      disposition: replace
+      permitted: [activate_pre_qualified_alternate, reroute_logistics, scenario_lever_generation]
+      escalation: "Executive Leadership"
+    note: >
+      A moderate-scoring in-region supplier feeding many downstream nodes is a
+      single concentrated reroute exposure.
+    evaluation:
+      clusters:
+        - C3_PRIORITY_OVERRIDE
+        - C4_SCENARIO_SUPPLIER_JOIN
+        - C5_TYPE_SPECIFICITY
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [NAT-MED]
+
+  - rule_id: NAT-R2                                 # high-risk, not in the hit region
+    priority: 4
+    when_all:
+      risk_level: HIGH
+      tier1_in_region: false
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring, scenario_lever_generation]
+      escalation: "Cross-functional Management"
+    evaluation:
+      clusters:
+        - C5_TYPE_SPECIFICITY
+        - C6_THRESHOLD_BANDING
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [NAT-R1]
+
+  - rule_id: NAT-MEDS                              # MEDIUM + structurally strategic
+    priority: 5
+    when_all:
+      risk_level: MEDIUM
+      sub_exposure_breadth: high
+    consequence:
+      disposition: monitor
+      permitted: [activate_pre_qualified_alternate, intensify_threat_monitoring]
+      escalation: "Cross-functional Management"
+    grounding: "High ripple potential -> proactive contingency even at MEDIUM (Tomlin 2006)."
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [NAT-MED, NAT-R1]
+
+  - rule_id: NAT-MED                               # MEDIUM, not structurally strategic
+    priority: 6
+    when_all:
+      risk_level: MEDIUM
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+
+  - rule_id: NAT-LOWS                              # LOW + structurally strategic
+    priority: 7
+    when_all:
+      risk_level: LOW
+      sub_exposure_breadth: high
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    grounding: "Watch structurally vital nodes even at LOW own-risk (Ivanov & Dolgui 2020)."
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [NAT-LOW, NAT-MED]
+
+  - rule_id: NAT-LOW                               # routine catch-all
+    priority: 8
+    when_all:
+      risk_level: LOW
+    consequence:
+      disposition: maintain
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+
+# =====================================================================
+#  EXEMPLARS
+# =====================================================================
+exemplars:
+  - exemplar_id: EX-NAT-05
+    rule_ref: NAT-R5
+    scenario:
+      disruption_type: natural_disaster
+      tier1_in_region: true
+      sub_exposure_breadth: high
+    key:
+      disposition: replace
+      escalation: "Executive Leadership"

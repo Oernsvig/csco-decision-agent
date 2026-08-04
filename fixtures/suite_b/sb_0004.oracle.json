@@ -1,0 +1,12 @@
+{
+  "scenario_id": "sb_0004",
+  "disruption_type": "natural_disaster",
+  "routing": {
+    "fired_rule_id": "NAT-NULL",
+    "scenario_action": "maintain_and_log",
+    "disposition": "maintain",
+    "escalation": "Responsible Analyst"
+  },
+  "suppliers": [],
+  "notes": ""
+}

@@ -1,0 +1,12 @@
+{
+  "scenario_id": "sb_0028",
+  "disruption_type": "cyber",
+  "routing": {
+    "fired_rule_id": "CYB-NULL",
+    "scenario_action": "maintain_and_log",
+    "disposition": "maintain",
+    "escalation": "Responsible Analyst"
+  },
+  "suppliers": [],
+  "notes": ""
+}

@@ -1,0 +1,39 @@
+# Secrets — never commit
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.venv
+venv/
+venv.nosync/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Tools
+.ruff_cache/
+.mypy_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+.claude/
+
+# macOS
+.DS_Store
+
+# Generated embed cuts (run: python -m csco.generators.playbook)
+corpus/playbooks_embed/

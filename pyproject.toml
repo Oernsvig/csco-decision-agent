@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "csco-agent"
+version = "1.0.0"
+description = "CSCO Decision Agent — a controlled comparison of three policy-grounding architectures for supply-chain disruption response"
+requires-python = ">=3.11"
+dependencies = [
+    # Pinned to the versions the runs used; requirements-lock.txt pins the full
+    # transitive set. The retrieval arms (Arm 2/4) drive a langgraph ReAct loop
+    # whose convergence behaviour depends on the langchain/langgraph major line:
+    # the 1.x line does NOT reproduce the results (its unbounded loop overflows
+    # gpt-4o's context). Keep the 0.3.x / 0.2.x stack below; do not bump the caps.
+    "langchain>=0.3,<0.4",
+    "langchain-openai>=0.2,<0.3",
+    "langchain-anthropic>=0.3,<0.4",
+    "langchain-neo4j>=0.3,<0.4",
+    "langchain-community>=0.3,<0.4",
+    "langchain-text-splitters>=0.3,<0.4",
+    "langgraph>=0.2,<0.3",
+    "neo4j>=5.20,<6",
+    "pydantic==2.13.4",
+    "pydantic-settings==2.14.2",
+    "python-dotenv==1.2.2",
+    "PyYAML==6.0.3",
+    "openai>=1.50,<2",
+    "anthropic>=0.30",
+    "tiktoken==0.13.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+    "black>=24.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+    "integration: tests that require a live Neo4j connection (deselect with -m 'not integration')",
+]

@@ -1,0 +1,19 @@
+{
+  "scenario_id": "sb_0006",
+  "disruption_type": "natural_disaster",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-NAT-01",
+      "disposition": "maintain",
+      "escalation": "Responsible Analyst",
+      "fired_rule_id": "NAT-LOW",
+      "permitted_actions": [
+        "intensify_threat_monitoring"
+      ],
+      "strategic_priority": "Rapid Reconfiguration",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

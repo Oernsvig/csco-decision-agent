@@ -1,0 +1,12 @@
+{
+  "scenario_id": "diag_0001",
+  "disruption_type": "geopolitical",
+  "routing": {
+    "fired_rule_id": "GEO-DT",
+    "scenario_action": "structural_fallthrough",
+    "disposition": "monitor",
+    "escalation": "Cross-functional Management"
+  },
+  "suppliers": [],
+  "notes": ""
+}

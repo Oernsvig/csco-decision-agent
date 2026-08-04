@@ -1,0 +1,21 @@
+{
+  "scenario_id": "diag_0010",
+  "disruption_type": "natural_disaster",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-NAT-01",
+      "disposition": "replace",
+      "escalation": "Executive Leadership",
+      "fired_rule_id": "NAT-R1",
+      "permitted_actions": [
+        "activate_pre_qualified_alternate",
+        "reroute_logistics",
+        "intensify_threat_monitoring"
+      ],
+      "strategic_priority": "Rapid Reconfiguration",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

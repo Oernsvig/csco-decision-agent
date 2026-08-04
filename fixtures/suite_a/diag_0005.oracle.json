@@ -1,0 +1,20 @@
+{
+  "scenario_id": "diag_0005",
+  "disruption_type": "geopolitical",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-GEO-01",
+      "disposition": "monitor",
+      "escalation": "Cross-functional Management",
+      "fired_rule_id": "GEO-MEDS",
+      "permitted_actions": [
+        "activate_pre_qualified_alternate",
+        "intensify_threat_monitoring"
+      ],
+      "strategic_priority": "Continuity Protection",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

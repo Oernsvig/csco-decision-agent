@@ -1,0 +1,12 @@
+{
+  "scenario_id": "sb_0016",
+  "disruption_type": "geopolitical",
+  "routing": {
+    "fired_rule_id": "GEO-NULL",
+    "scenario_action": "maintain_and_log",
+    "disposition": "maintain",
+    "escalation": "Responsible Analyst"
+  },
+  "suppliers": [],
+  "notes": ""
+}

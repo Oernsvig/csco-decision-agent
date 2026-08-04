@@ -1,0 +1,10 @@
+{
+  "suite_id": "suite_a_action_v2",
+  "total_fixtures": 37,
+  "stratum": "prescribed_action",
+  "description": "Suite A: 37 prescribed-action canonical cases (one per action rule).",
+  "generation_seed": 20240,
+  "specs_hash": "4fd4cda78dcad26a",
+  "prompt_version": "1.0",
+  "generated_at": "2026-08-01T12:16:09.786712Z"
+}

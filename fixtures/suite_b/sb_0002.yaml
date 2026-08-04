@@ -1,0 +1,18 @@
+affected_regions:
+- Region-A
+boundary: none
+count_disrupted_paths: 1
+disruption_type: geopolitical
+impacted_industries:
+- Industry-X
+max_disrupted_tier: 3
+named_companies:
+- Company-Z
+null_mode: canonical
+path_on_network: true
+shared_subtier_source: false
+stratum: 'null'
+suite: B
+suppliers: []
+target_rule_id: GEO-DT-NULL
+tier1_on_disrupted_path: false

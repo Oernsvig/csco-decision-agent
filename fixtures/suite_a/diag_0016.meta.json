@@ -1,0 +1,10 @@
+{
+  "scenario_id": "diag_0016",
+  "disruption_type": "economic",
+  "suite": "A",
+  "stratum": "action",
+  "null_mode": null,
+  "boundary": "none",
+  "target_rule_id": "ECON-DT",
+  "oracle_source": "deterministic_policy_evaluator"
+}

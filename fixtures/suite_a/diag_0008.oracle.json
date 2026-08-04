@@ -1,0 +1,12 @@
+{
+  "scenario_id": "diag_0008",
+  "disruption_type": "natural_disaster",
+  "routing": {
+    "fired_rule_id": "NAT-DT",
+    "scenario_action": "structural_fallthrough",
+    "disposition": "monitor",
+    "escalation": "Cross-functional Management"
+  },
+  "suppliers": [],
+  "notes": ""
+}

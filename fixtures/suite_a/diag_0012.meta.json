@@ -1,0 +1,10 @@
+{
+  "scenario_id": "diag_0012",
+  "disruption_type": "natural_disaster",
+  "suite": "A",
+  "stratum": "action",
+  "null_mode": null,
+  "boundary": "none",
+  "target_rule_id": "NAT-R2",
+  "oracle_source": "deterministic_policy_evaluator"
+}

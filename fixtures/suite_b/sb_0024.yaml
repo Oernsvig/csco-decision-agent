@@ -1,0 +1,18 @@
+affected_regions:
+- Region-A
+boundary: none
+count_disrupted_paths: 0
+disruption_type: economic
+impacted_industries:
+- Industry-X
+max_disrupted_tier: 1
+named_companies:
+- Company-Z
+null_mode: no_path_on_network
+path_on_network: false
+shared_subtier_source: false
+stratum: 'null'
+suite: B
+suppliers: []
+target_rule_id: null
+tier1_on_disrupted_path: true

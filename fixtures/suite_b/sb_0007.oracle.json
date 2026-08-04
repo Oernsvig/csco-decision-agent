@@ -1,0 +1,12 @@
+{
+  "scenario_id": "sb_0007",
+  "disruption_type": "economic",
+  "routing": {
+    "fired_rule_id": "ECON-NULL",
+    "scenario_action": "maintain_and_log",
+    "disposition": "maintain",
+    "escalation": "Responsible Analyst"
+  },
+  "suppliers": [],
+  "notes": ""
+}

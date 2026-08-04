@@ -1,0 +1,28 @@
+affected_regions:
+- Region-A
+boundary: none
+count_disrupted_paths: 1
+disruption_type: labour
+impacted_industries:
+- Industry-X
+max_disrupted_tier: 1
+named_companies:
+- Company-Z
+null_mode: null
+path_on_network: true
+shared_subtier_source: false
+stratum: action
+suite: A
+suppliers:
+- name: Supplier-S-GEN-LAB-01
+  product_supplied: component-X
+  risk_score: 0.5
+  sub_dependency_ratio: 0.5
+  sub_downstream_criticality: 0.25
+  sub_exposure_breadth: 0.5
+  sub_exposure_depth: 0.5
+  sub_node_centrality: 0.25
+  supplier_id: S-GEN-LAB-01
+  tier1_in_region: false
+target_rule_id: LAB-MED
+tier1_on_disrupted_path: true

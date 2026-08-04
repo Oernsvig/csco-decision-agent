@@ -1,0 +1,10 @@
+{
+  "scenario_id": "diag_0025",
+  "disruption_type": "cyber",
+  "suite": "A",
+  "stratum": "action",
+  "null_mode": null,
+  "boundary": "none",
+  "target_rule_id": "CYB-HUB",
+  "oracle_source": "deterministic_policy_evaluator"
+}

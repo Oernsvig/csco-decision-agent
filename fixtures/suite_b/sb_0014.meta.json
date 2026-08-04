@@ -1,0 +1,10 @@
+{
+  "scenario_id": "sb_0014",
+  "disruption_type": "labour",
+  "suite": "B",
+  "stratum": "null",
+  "null_mode": "canonical",
+  "boundary": "none",
+  "target_rule_id": "LAB-DT-NULL",
+  "oracle_source": "deterministic_policy_evaluator"
+}

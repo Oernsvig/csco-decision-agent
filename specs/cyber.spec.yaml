@@ -1,0 +1,295 @@
+# =====================================================================
+#  DECISION SPECIFICATION  -  cyber
+#  DISTINCT SIGNATURE: Propagates through connectivity, not geography. Keys on node centrality (contagion reach).
+# =====================================================================
+
+disruption_type: cyber
+
+risk_bands:
+  HIGH:   ">=0.60"
+  MEDIUM: "0.45-0.59"
+  LOW:    "<0.45"
+
+sub_score_bands:
+  high: ">=0.66"
+  med:  "0.33-0.65"
+  low:  "<0.33"
+
+strategic_priority_cell: "Rapid Reconfiguration"
+strategic_priority_note: "Fast, propagating, non-spatial: contain by rapid isolation / rerouting (Tomlin 2006) before the ripple spreads (Dolgui et al. 2018)."
+
+levers:
+  permitted_response:
+    - activate_pre_qualified_alternate
+    - intensify_threat_monitoring
+    - scenario_lever_generation
+    - strategic_buffer_drawdown
+    - convene_crisis_response_center
+    - reroute_logistics
+    - expedited_emergent_design
+  prohibited_at_response:
+    - reshoring_nearshoring
+    - footprint_redesign
+    - new_in_sourcing
+    - ground_up_redesign
+    - contract_renegotiation
+
+escalation_ladder:
+  levels:
+    - { name: "Responsible Analyst", rank: 0, authority: responsible_analyst }
+    - { name: "Cross-functional Management", rank: 1, authority: cross_functional_management }
+    - { name: "Executive Leadership", rank: 2, authority: executive_leadership }
+
+# =====================================================================
+#  BENCHMARK EVALUATION DESIGN
+# =====================================================================
+
+evaluation_design:
+  threshold_probe_values:
+    LOW_EDGE: 0.449
+    MEDIUM_LOWER_EDGE: 0.450
+    MEDIUM_UPPER_EDGE: 0.599
+    HIGH_EDGE: 0.600
+  contrast_pairs:
+    - pair_id: CYB_HUB_vs_CYB_MED
+      focal_rule: CYB-HUB
+      contrast_rule: CYB-MED
+      vary_only: [sub_node_centrality]
+      purpose: "Tests whether cyber centrality discriminator (CYB-HUB) is applied instead of generic medium monitoring."
+    - pair_id: CYB_R3_vs_CYB_MED
+      focal_rule: CYB-R3
+      contrast_rule: CYB-MED
+      vary_only: [shared_subtier_source, count_disrupted_paths]
+      purpose: "Tests whether cyber shared sub-tier override fires before generic medium monitoring."
+    - pair_id: CYB_R1_vs_GEO_R1_analogue
+      focal_rule: CYB-R1
+      contrast_rule: GEO-R1
+      vary_only: [disruption_type]
+      purpose: "Cyber HIGH-risk -> monitor (not replace). Tests resistance to cross-policy contamination from geopolitical policy."
+    - pair_id: CYB_DT_vs_CYB_DT_NULL
+      focal_rule: CYB-DT
+      contrast_rule: CYB-DT-NULL
+      vary_only: [shared_subtier_source, count_disrupted_paths]
+      purpose: "Tests structural lower-tier concern vs harmless deep-tier."
+    - pair_id: CYB_MEDS_vs_CYB_MED
+      focal_rule: CYB-MEDS
+      contrast_rule: CYB-MED
+      vary_only: [sub_node_centrality]
+      purpose: "Medium node-centrality (structural contagion reach, below the hub threshold) triggers proactive contingency (Cross-functional Management) vs generic monitoring (Responsible Analyst)."
+
+# =====================================================================
+#  DECISION RULES
+# =====================================================================
+
+# --- PASS 1: scenario-level routing rules -----------------------------
+routing_rules:
+  - rule_id: CYB-NULL
+    when: "path_on_network == false OR (all Tier-1 LOW AND sub_downstream_criticality not high)"
+    consequence:
+      route: maintain_and_log
+      disposition: maintain
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+
+  - rule_id: CYB-DT
+    when: "tier1_on_disrupted_path == false AND (shared_subtier_source == true OR count_disrupted_paths >= 2)"
+    consequence:
+      route: structural_fallthrough
+      disposition: monitor
+      escalation: "Cross-functional Management"
+    note: "No Tier-1 scored - branch on structure + material, do not default to maintain."
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+      contrast_with: [CYB-DT-NULL]
+
+  - rule_id: CYB-DT-NULL
+    when: "tier1_on_disrupted_path == false AND NOT (shared_subtier_source == true OR count_disrupted_paths >= 2)"
+    consequence:
+      route: maintain_and_log
+      disposition: maintain
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+      contrast_with: [CYB-DT]
+
+# --- PASS 2: per-Tier-1 supplier rules --------------------------------
+supplier_rules:
+
+  - rule_id: CYB-R3                                 # shared sub-tier override
+    priority: 1
+    when_all:
+      shared_subtier_source: true
+      count_disrupted_paths: ">=2"
+      risk_level: [MEDIUM, HIGH]
+    consequence:
+      disposition: replace
+      permitted: [activate_pre_qualified_alternate, intensify_threat_monitoring, scenario_lever_generation]
+      escalation: "Executive Leadership"
+    evaluation:
+      clusters:
+        - C3_PRIORITY_OVERRIDE
+        - C4_SCENARIO_SUPPLIER_JOIN
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [CYB-HUB, CYB-MED]
+
+  - rule_id: CYB-HUB                                # CYBER DISCRIMINATOR
+    priority: 2
+    when_all:
+      risk_level: [MEDIUM, HIGH]
+      sub_node_centrality: high
+    consequence:
+      disposition: replace
+      permitted: [activate_pre_qualified_alternate, intensify_threat_monitoring, convene_crisis_response_center]
+      escalation: "Executive Leadership"
+    note: >
+      A highly central supplier hit by a cyber incident propagates widely;
+      centrality alone drives this override, regardless of a moderate own risk band.
+    evaluation:
+      clusters:
+        - C3_PRIORITY_OVERRIDE
+        - C4_SCENARIO_SUPPLIER_JOIN
+        - C5_TYPE_SPECIFICITY
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [CYB-MED]
+
+  - rule_id: CYB-R1                                 # high-risk node
+    priority: 3
+    when_all: { risk_level: HIGH }
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring, convene_crisis_response_center]
+      escalation: "Cross-functional Management"
+    evaluation:
+      clusters:
+        - C5_TYPE_SPECIFICITY
+        - C6_THRESHOLD_BANDING
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+
+  - rule_id: CYB-MEDS                              # MEDIUM + structurally strategic
+    priority: 4
+    when_all:
+      risk_level: MEDIUM
+      sub_node_centrality: med
+    consequence:
+      disposition: monitor
+      permitted: [activate_pre_qualified_alternate, intensify_threat_monitoring]
+      escalation: "Cross-functional Management"
+    grounding: "High ripple potential -> proactive contingency even at MEDIUM (Tomlin 2006)."
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [CYB-MED, CYB-R1]
+
+  - rule_id: CYB-MED                               # MEDIUM, not structurally strategic
+    priority: 5
+    when_all:
+      risk_level: MEDIUM
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+
+  - rule_id: CYB-LOWS                              # LOW + structurally strategic
+    priority: 6
+    when_all:
+      risk_level: LOW
+      sub_node_centrality: high
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    grounding: "Watch structurally vital nodes even at LOW own-risk (Ivanov & Dolgui 2020)."
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [CYB-LOW, CYB-MED]
+
+  - rule_id: CYB-LOW                               # routine catch-all
+    priority: 7
+    when_all:
+      risk_level: LOW
+    consequence:
+      disposition: maintain
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+
+# =====================================================================
+#  EXEMPLARS
+# =====================================================================
+exemplars:
+  - exemplar_id: EX-CYB-HUB
+    rule_ref: CYB-HUB
+    scenario:
+      disruption_type: cyber
+      sub_node_centrality: high
+    key:
+      disposition: replace
+      escalation: "Executive Leadership"

@@ -1,0 +1,10 @@
+{
+  "scenario_id": "sb_0008",
+  "disruption_type": "economic",
+  "suite": "B",
+  "stratum": "null",
+  "null_mode": "canonical",
+  "boundary": "none",
+  "target_rule_id": "ECON-DT-NULL",
+  "oracle_source": "deterministic_policy_evaluator"
+}

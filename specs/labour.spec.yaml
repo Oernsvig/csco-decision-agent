@@ -1,0 +1,317 @@
+# =====================================================================
+#  DECISION SPECIFICATION  -  labour
+#  DISTINCT SIGNATURE: Site-specific; strikes can be prolonged/recurring. Keys on struck site (in region) x dependency ratio.
+# =====================================================================
+
+disruption_type: labour
+
+risk_bands:
+  HIGH:   ">=0.60"
+  MEDIUM: "0.45-0.59"
+  LOW:    "<0.45"
+
+sub_score_bands:
+  high: ">=0.66"
+  med:  "0.33-0.65"
+  low:  "<0.33"
+
+strategic_priority_cell: "Continuity Protection"
+strategic_priority_note: "Strikes can be prolonged / recurring: standing redundancy for strike-exposed suppliers (Tomlin 2006; viability, Ivanov & Dolgui 2020)."
+
+levers:
+  permitted_response:
+    - activate_pre_qualified_alternate
+    - intensify_threat_monitoring
+    - scenario_lever_generation
+    - strategic_buffer_drawdown
+    - convene_crisis_response_center
+    - reroute_logistics
+    - expedited_emergent_design
+  prohibited_at_response:
+    - reshoring_nearshoring
+    - footprint_redesign
+    - new_in_sourcing
+    - ground_up_redesign
+    - contract_renegotiation
+
+escalation_ladder:
+  levels:
+    - { name: "Responsible Analyst", rank: 0, authority: responsible_analyst }
+    - { name: "Cross-functional Management", rank: 1, authority: cross_functional_management }
+    - { name: "Executive Leadership", rank: 2, authority: executive_leadership }
+
+# =====================================================================
+#  BENCHMARK EVALUATION DESIGN
+# =====================================================================
+
+evaluation_design:
+  threshold_probe_values:
+    LOW_EDGE: 0.449
+    MEDIUM_LOWER_EDGE: 0.450
+    MEDIUM_UPPER_EDGE: 0.599
+    HIGH_EDGE: 0.600
+  contrast_pairs:
+    - pair_id: LAB_SITE_vs_LAB_MED
+      focal_rule: LAB-SITE
+      contrast_rule: LAB-MED
+      vary_only: [tier1_in_region, sub_dependency_ratio]
+      purpose: "Tests whether struck-site dependency override (LAB-SITE) is applied instead of generic medium monitoring."
+    - pair_id: LAB_R3_vs_LAB_MED
+      focal_rule: LAB-R3
+      contrast_rule: LAB-MED
+      vary_only: [shared_subtier_source, count_disrupted_paths]
+      purpose: "Tests whether labour shared sub-tier override fires before generic medium monitoring."
+    - pair_id: LAB_R1_vs_LAB_R2
+      focal_rule: LAB-R1
+      contrast_rule: LAB-R2
+      vary_only: [tier1_in_region]
+      purpose: "In-region (struck site) discriminates replace (LAB-R1) from monitor (LAB-R2) for HIGH-risk suppliers."
+    - pair_id: LAB_DT_vs_LAB_DT_NULL
+      focal_rule: LAB-DT
+      contrast_rule: LAB-DT-NULL
+      vary_only: [shared_subtier_source, count_disrupted_paths]
+      purpose: "Tests structural lower-tier concern vs harmless deep-tier."
+    - pair_id: LAB_MEDS_vs_LAB_MED
+      focal_rule: LAB-MEDS
+      contrast_rule: LAB-MED
+      vary_only: [tier1_in_region]
+      purpose: "In-region (struck site) triggers proactive contingency (Cross-functional Management) vs generic monitoring (Responsible Analyst)."
+
+# =====================================================================
+#  DECISION RULES
+# =====================================================================
+
+# --- PASS 1: scenario-level routing rules -----------------------------
+routing_rules:
+  - rule_id: LAB-NULL
+    when: "path_on_network == false OR (all Tier-1 LOW AND sub_downstream_criticality not high)"
+    consequence:
+      route: maintain_and_log
+      disposition: maintain
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+
+  - rule_id: LAB-DT
+    when: "tier1_on_disrupted_path == false AND (shared_subtier_source == true OR count_disrupted_paths >= 2)"
+    consequence:
+      route: structural_fallthrough
+      disposition: monitor
+      escalation: "Cross-functional Management"
+    note: "No Tier-1 scored - branch on structure + material, do not default to maintain."
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+      contrast_with: [LAB-DT-NULL]
+
+  - rule_id: LAB-DT-NULL
+    when: "tier1_on_disrupted_path == false AND NOT (shared_subtier_source == true OR count_disrupted_paths >= 2)"
+    consequence:
+      route: maintain_and_log
+      disposition: maintain
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters: [C1_PASS_STRUCTURE, C2_DEEP_TIER, C9_ACTION_ESCALATION_EXACTNESS]
+      reference_expectations:
+        band: not_applicable
+        escalation: required
+        action: not_applicable
+        strategic_priority: optional
+      contrast_with: [LAB-DT]
+
+# --- PASS 2: per-Tier-1 supplier rules --------------------------------
+supplier_rules:
+
+  - rule_id: LAB-R3                                 # shared sub-tier override
+    priority: 1
+    when_all:
+      shared_subtier_source: true
+      count_disrupted_paths: ">=2"
+      risk_level: [MEDIUM, HIGH]
+    consequence:
+      disposition: replace
+      permitted: [activate_pre_qualified_alternate, reroute_logistics, scenario_lever_generation]
+      escalation: "Executive Leadership"
+    evaluation:
+      clusters:
+        - C3_PRIORITY_OVERRIDE
+        - C4_SCENARIO_SUPPLIER_JOIN
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [LAB-R1, LAB-MED]
+
+  - rule_id: LAB-R1                                 # high-risk, directly struck
+    priority: 2
+    when_all: { risk_level: HIGH, tier1_in_region: true }
+    consequence:
+      disposition: replace
+      permitted: [activate_pre_qualified_alternate, reroute_logistics, intensify_threat_monitoring]
+      escalation: "Executive Leadership"
+    evaluation:
+      clusters:
+        - C5_TYPE_SPECIFICITY
+        - C6_THRESHOLD_BANDING
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [LAB-R2]
+
+  - rule_id: LAB-SITE                               # LABOUR DISCRIMINATOR
+    priority: 3
+    when_all:
+      risk_level: [MEDIUM, HIGH]
+      tier1_in_region: true
+      sub_dependency_ratio: high
+    consequence:
+      disposition: replace
+      permitted: [activate_pre_qualified_alternate, reroute_logistics, scenario_lever_generation]
+      escalation: "Executive Leadership"
+    note: >
+      A struck site we depend on heavily is a concentrated stoppage even at a moderate
+      own-band. Combines tier1_in_region (struck) with dependency_ratio (reliance).
+    evaluation:
+      clusters:
+        - C3_PRIORITY_OVERRIDE
+        - C4_SCENARIO_SUPPLIER_JOIN
+        - C5_TYPE_SPECIFICITY
+        - C9_ACTION_ESCALATION_EXACTNESS
+        - C10_STRATEGIC_POSTURE
+        - C12_CROSS_POLICY_CONTAMINATION
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [LAB-MED]
+
+  - rule_id: LAB-R2                                 # high-risk, not at a struck site
+    priority: 4
+    when_all: { risk_level: HIGH, tier1_in_region: false }
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring, scenario_lever_generation]
+      escalation: "Cross-functional Management"
+    evaluation:
+      clusters:
+        - C5_TYPE_SPECIFICITY
+        - C6_THRESHOLD_BANDING
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [LAB-R1]
+
+  - rule_id: LAB-MEDS                              # MEDIUM + structurally strategic
+    priority: 5
+    when_all:
+      risk_level: MEDIUM
+      tier1_in_region: true
+    consequence:
+      disposition: monitor
+      permitted: [activate_pre_qualified_alternate, intensify_threat_monitoring]
+      escalation: "Cross-functional Management"
+    grounding: "High ripple potential -> proactive contingency even at MEDIUM (Tomlin 2006)."
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [LAB-MED, LAB-R1]
+
+  - rule_id: LAB-MED                               # MEDIUM, not structurally strategic
+    priority: 6
+    when_all:
+      risk_level: MEDIUM
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+
+  - rule_id: LAB-LOWS                              # LOW + structurally strategic
+    priority: 7
+    when_all:
+      risk_level: LOW
+      tier1_in_region: true
+    consequence:
+      disposition: monitor
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    grounding: "Watch structurally vital nodes even at LOW own-risk (Ivanov & Dolgui 2020)."
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+      contrast_with: [LAB-LOW, LAB-MED]
+
+  - rule_id: LAB-LOW                               # routine catch-all
+    priority: 8
+    when_all:
+      risk_level: LOW
+    consequence:
+      disposition: maintain
+      permitted: [intensify_threat_monitoring]
+      escalation: "Responsible Analyst"
+    evaluation:
+      clusters:
+        - C8_FALLBACK_DISCIPLINE
+        - C9_ACTION_ESCALATION_EXACTNESS
+      reference_expectations:
+        band: required
+        escalation: required
+        action: required
+        strategic_priority: optional
+
+# =====================================================================
+#  EXEMPLARS
+# =====================================================================
+exemplars:
+  - exemplar_id: EX-LAB-SITE
+    rule_ref: LAB-SITE
+    scenario:
+      disruption_type: labour
+      tier1_in_region: true
+      sub_dependency_ratio: high
+    key:
+      disposition: replace
+      escalation: "Executive Leadership"

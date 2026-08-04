@@ -1,0 +1,10 @@
+{
+  "scenario_id": "sb_0031",
+  "disruption_type": "cyber",
+  "suite": "B",
+  "stratum": "null",
+  "null_mode": "dt_null_routing",
+  "boundary": "none",
+  "target_rule_id": null,
+  "oracle_source": "deterministic_policy_evaluator"
+}

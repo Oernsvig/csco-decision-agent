@@ -1,0 +1,19 @@
+{
+  "scenario_id": "sb_0009",
+  "disruption_type": "economic",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-ECO-01",
+      "disposition": "maintain",
+      "escalation": "Responsible Analyst",
+      "fired_rule_id": "ECON-LOW",
+      "permitted_actions": [
+        "intensify_threat_monitoring"
+      ],
+      "strategic_priority": "Cost Containment",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

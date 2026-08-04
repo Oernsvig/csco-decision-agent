@@ -1,0 +1,10 @@
+{
+  "scenario_id": "diag_0005",
+  "disruption_type": "geopolitical",
+  "suite": "A",
+  "stratum": "action",
+  "null_mode": null,
+  "boundary": "none",
+  "target_rule_id": "GEO-MEDS",
+  "oracle_source": "deterministic_policy_evaluator"
+}

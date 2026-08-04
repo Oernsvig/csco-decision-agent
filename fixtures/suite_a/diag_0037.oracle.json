@@ -1,0 +1,19 @@
+{
+  "scenario_id": "diag_0037",
+  "disruption_type": "labour",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-LAB-01",
+      "disposition": "monitor",
+      "escalation": "Responsible Analyst",
+      "fired_rule_id": "LAB-LOWS",
+      "permitted_actions": [
+        "intensify_threat_monitoring"
+      ],
+      "strategic_priority": "Continuity Protection",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

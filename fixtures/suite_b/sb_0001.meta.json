@@ -1,0 +1,10 @@
+{
+  "scenario_id": "sb_0001",
+  "disruption_type": "geopolitical",
+  "suite": "B",
+  "stratum": "null",
+  "null_mode": "canonical",
+  "boundary": "none",
+  "target_rule_id": "GEO-NULL",
+  "oracle_source": "deterministic_policy_evaluator"
+}

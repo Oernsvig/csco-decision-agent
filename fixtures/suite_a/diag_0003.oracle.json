@@ -1,0 +1,20 @@
+{
+  "scenario_id": "diag_0003",
+  "disruption_type": "geopolitical",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-GEO-01",
+      "disposition": "replace",
+      "escalation": "Executive Leadership",
+      "fired_rule_id": "GEO-R1",
+      "permitted_actions": [
+        "activate_pre_qualified_alternate",
+        "intensify_threat_monitoring"
+      ],
+      "strategic_priority": "Continuity Protection",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}

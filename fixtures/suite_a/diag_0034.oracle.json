@@ -1,0 +1,20 @@
+{
+  "scenario_id": "diag_0034",
+  "disruption_type": "labour",
+  "routing": null,
+  "suppliers": [
+    {
+      "supplier_id": "S-GEN-LAB-01",
+      "disposition": "monitor",
+      "escalation": "Cross-functional Management",
+      "fired_rule_id": "LAB-R2",
+      "permitted_actions": [
+        "intensify_threat_monitoring",
+        "scenario_lever_generation"
+      ],
+      "strategic_priority": "Continuity Protection",
+      "strategic_note": null
+    }
+  ],
+  "notes": ""
+}
